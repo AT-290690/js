@@ -28,7 +28,7 @@ export function Terminal({ output, onClear, onShare, onRun }: TerminalProps) {
   };
 
   return (
-    <div className="h-48 bg-[#1e1e1e] border-t border-[#3e3e42] flex flex-col">
+    <div className="h-32 bg-[#1e1e1e] border-t border-[#3e3e42] flex flex-col">
       {/* Terminal Output */}
       <div className="flex-1 overflow-auto p-3 font-mono text-sm">
         {output.length === 0 ? (
