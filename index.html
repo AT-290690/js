@@ -4,18 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JavaScript</title>
-    <script type="module" crossorigin src="./assets/index-DcwUMaYL.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-XyLUHzBk.css" />
+    <script type="module" crossorigin src="./assets/index-DJbPEf2w.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-XyLUHzBk.css">
   </head>
 
   <body>
     <script>
-      const _closeApp = () => {
+      window.globalThis._closeApp = () => {
         document.getElementById("root").style.display = "block";
         document.getElementById("close").style.display = "none";
         document.getElementById("app").style.display = "none";
       };
-      const _openApp = () => {
+      window.globalThis._openApp = () => {
         document.getElementById("root").style.display = "none";
         document.getElementById("close").style.display = "block";
         document.getElementById("app").style.display = "block";
@@ -27,14 +27,14 @@
       id="close"
       style="
         display: none;
-        color: black;
+        color: red;
         position: absolute;
         top: 0px;
         right: 10px;
       "
-      onclick="_closeApp()"
+      onclick="window.globalThis._closeApp()"
     >
-      x
+      ×
     </button>
   </body>
 </html>
