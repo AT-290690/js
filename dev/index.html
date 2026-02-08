@@ -7,7 +7,33 @@
   </head>
 
   <body>
+    <script>
+      const _closeApp = () => {
+        document.getElementById("root").style.display = "block";
+        document.getElementById("close").style.display = "none";
+        document.getElementById("app").style.display = "none";
+      };
+      const _openApp = () => {
+        document.getElementById("root").style.display = "none";
+        document.getElementById("close").style.display = "block";
+        document.getElementById("app").style.display = "block";
+      };
+    </script>
+    <div id="app"></div>
     <div id="root"></div>
+    <button
+      id="close"
+      style="
+        display: none;
+        color: black;
+        position: absolute;
+        top: 0px;
+        left: 10px;
+      "
+      onclick="_closeApp()"
+    >
+      x
+    </button>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

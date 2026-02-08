@@ -5,10 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JavaScript</title>
     <script type="module" crossorigin src="./assets/index-DcwUMaYL.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-XyLUHzBk.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-XyLUHzBk.css" />
   </head>
 
   <body>
+    <script>
+      const _closeApp = () => {
+        document.getElementById("root").style.display = "block";
+        document.getElementById("close").style.display = "none";
+        document.getElementById("app").style.display = "none";
+      };
+      const _openApp = () => {
+        document.getElementById("root").style.display = "none";
+        document.getElementById("close").style.display = "block";
+        document.getElementById("app").style.display = "block";
+      };
+    </script>
+    <div id="app"></div>
     <div id="root"></div>
+    <button
+      id="close"
+      style="
+        display: none;
+        color: black;
+        position: absolute;
+        top: 0px;
+        left: 10px;
+      "
+      onclick="_closeApp()"
+    >
+      x
+    </button>
   </body>
 </html>
