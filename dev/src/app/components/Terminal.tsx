@@ -28,31 +28,26 @@ export function Terminal({ output, onClear, onShare, onRun }: TerminalProps) {
   };
 
   return (
-    <div className="h-32 bg-[#1e1e1e] border-t border-[#3e3e42] flex flex-col">
+    <div className="h-32 bg-[#011627] border-t border-[#637777] flex flex-col">
       {/* Terminal Output */}
       <div className="flex-1 overflow-auto p-3 font-mono text-sm">
-        {output.length === 0 ? (
-          <div className="text-gray-500 italic">
-            Run your code to see output here...
-          </div>
-        ) : (
-          <div className="space-y-1">
-            {output.map((item, index) => (
-              <div
-                key={index}
-                className={`${getOutputColor(
-                  item.type
-                )} whitespace-pre-wrap break-words`}
-              >
-                {item.content}
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="space-y-1">
+          {output.map((item, index) => (
+            <div
+              key={index}
+              style={{ fontSize: "10px" }}
+              className={`${getOutputColor(
+                item.type
+              )} whitespace-pre-wrap break-words`}
+            >
+              {item.content}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Terminal Actions */}
-      <div className="h-6 border-t border-[#3e3e42] flex items-center justify-end gap-2 px-5">
+      <div className="h-6 border-t border-[#637777] flex items-center justify-end gap-2 px-5">
         <button
           onClick={onClear}
           className="text-gray-400 hover:text-white transition-colors"
