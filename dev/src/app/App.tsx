@@ -1,28 +1,31 @@
-import { useEffect, useRef, useState } from 'react';
-import Editor from '@monaco-editor/react';
-import LZString from 'lz-string';
-import { Terminal } from './components/Terminal';
+import { useEffect, useRef, useState } from "react";
+import Editor from "@monaco-editor/react";
+import LZString from "lz-string";
+import { Terminal } from "./components/Terminal";
 
 interface TerminalOutput {
-  type: 'log' | 'error' | 'warn' | 'info';
+  type: "log" | "error" | "warn" | "info";
   content: string;
   timestamp: number;
 }
-
+const initialCode =
+  '// Write your JavaScript code here\nconsole.log("Hello, World!");';
 export default function App() {
-  const [code, setCode] = useState('// Write your JavaScript code here\nconsole.log("Hello, World!");');
+  const [code, setCode] = useState(initialCode);
   const [output, setOutput] = useState<TerminalOutput[]>([]);
   const editorRef = useRef<any>(null);
 
   // Load code from URL on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const compressed = params.get('s');
-    const autoRun = params.get('r');
+    const compressed = params.get("s");
+    const autoRun = params.get("r");
 
     if (compressed) {
       try {
-        const decompressed = LZString.decompressFromBase64(decodeURIComponent(compressed));
+        const decompressed = LZString.decompressFromBase64(
+          decodeURIComponent(compressed)
+        );
         if (decompressed) {
           setCode(decompressed);
           if (autoRun) {
@@ -31,7 +34,7 @@ export default function App() {
           }
         }
       } catch (error) {
-        console.error('Failed to decompress code from URL:', error);
+        console.error("Failed to decompress code from URL:", error);
       }
     }
   }, []);
@@ -40,19 +43,19 @@ export default function App() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ctrl/Cmd + S to run
-      if (e.key.toLowerCase() === 's' && (e.ctrlKey || e.metaKey)) {
+      if (e.key.toLowerCase() === "s" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         e.stopPropagation();
         runCode();
       }
       // Escape to clear terminal
-      else if (e.key === 'Escape') {
+      else if (e.key === "Escape") {
         setOutput([]);
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [code]);
 
   const runCode = (codeToRun?: string) => {
@@ -63,44 +66,52 @@ export default function App() {
     const logs: TerminalOutput[] = [];
     const originalConsole = { ...console };
 
-    const captureLog = (type: 'log' | 'error' | 'warn' | 'info', ...args: any[]) => {
-      const content = args.map(arg => {
-        if (typeof arg === 'object') {
-          try {
-            return JSON.stringify(arg, null, 2);
-          } catch {
-            return String(arg);
+    const captureLog = (
+      type: "log" | "error" | "warn" | "info",
+      ...args: any[]
+    ) => {
+      const content = args
+        .map((arg) => {
+          if (typeof arg === "object") {
+            try {
+              return JSON.stringify(arg, null, 2);
+            } catch {
+              return String(arg);
+            }
           }
-        }
-        return String(arg);
-      }).join(' ');
+          return String(arg);
+        })
+        .join(" ");
 
       logs.push({ type, content, timestamp: Date.now() });
     };
 
     // Override console methods
-    console.log = (...args) => captureLog('log', ...args);
-    console.error = (...args) => captureLog('error', ...args);
-    console.warn = (...args) => captureLog('warn', ...args);
-    console.info = (...args) => captureLog('info', ...args);
+    console.log = (...args) => captureLog("log", ...args);
+    console.error = (...args) => captureLog("error", ...args);
+    console.warn = (...args) => captureLog("warn", ...args);
+    console.info = (...args) => captureLog("info", ...args);
 
     try {
       // Execute code
       const result = eval(codeString);
-      
+
       // If there's a return value and nothing was logged, show it
       if (result !== undefined && logs.length === 0) {
-        logs.push({ 
-          type: 'log', 
-          content: typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result),
-          timestamp: Date.now() 
+        logs.push({
+          type: "log",
+          content:
+            typeof result === "object"
+              ? JSON.stringify(result, null, 2)
+              : String(result),
+          timestamp: Date.now(),
         });
       }
     } catch (error: any) {
-      logs.push({ 
-        type: 'error', 
+      logs.push({
+        type: "error",
         content: error.toString(),
-        timestamp: Date.now() 
+        timestamp: Date.now(),
       });
     } finally {
       // Restore console
@@ -118,30 +129,39 @@ export default function App() {
       const compressed = LZString.compressToBase64(code);
       const encoded = encodeURIComponent(compressed);
       const url = `${window.location.origin}${window.location.pathname}?s=${encoded}`;
-      
-      navigator.clipboard.writeText(url).then(() => {
-        setOutput([{
-          type: 'info',
-          content: '✓ Shareable link copied to clipboard!',
-          timestamp: Date.now()
-        }]);
-      }).catch(() => {
-        setOutput([{
-          type: 'info',
-          content: `Share URL: ${url}`,
-          timestamp: Date.now()
-        }]);
-      });
+
+      navigator.clipboard
+        .writeText(url)
+        .then(() => {
+          setOutput([
+            {
+              type: "info",
+              content: "✓ Shareable link copied to clipboard!",
+              timestamp: Date.now(),
+            },
+          ]);
+        })
+        .catch(() => {
+          setOutput([
+            {
+              type: "info",
+              content: url,
+              timestamp: Date.now(),
+            },
+          ]);
+        });
     } catch (error) {
-      setOutput([{
-        type: 'error',
-        content: 'Failed to generate share link',
-        timestamp: Date.now()
-      }]);
+      setOutput([
+        {
+          type: "error",
+          content: "Failed to generate share link",
+          timestamp: Date.now(),
+        },
+      ]);
     }
   };
 
-  const handleEditorDidMount = (editor: any) => {
+  const handleEditorDidMount = (editor: any, _monaco: any) => {
     editorRef.current = editor;
     editor.focus();
   };
@@ -155,22 +175,33 @@ export default function App() {
           defaultLanguage="javascript"
           theme="vs-dark"
           value={code}
-          onChange={(value) => setCode(value || '')}
+          onChange={(value) => setCode(value || "")}
           onMount={handleEditorDidMount}
           options={{
-            fontSize: 14,
+            fontSize: 12,
+            bracketPairColorization: { enabled: true },
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
-            automaticLayout: true,
+            fontLigatures: true,
+            lineNumbers: "off",
             tabSize: 2,
+            automaticLayout: true,
+            renderWhitespace: "boundary",
+            guides: {
+              indentation: false,
+              bracketPairs: true,
+              bracketPairsHorizontal: true,
+              highlightActiveBracketPair: true,
+              highlightActiveIndentation: true,
+            },
           }}
         />
       </div>
 
       {/* Terminal */}
-      <Terminal 
-        output={output} 
-        onClear={() => setOutput([])} 
+      <Terminal
+        output={output}
+        onClear={() => setOutput([])}
         onShare={handleShare}
         onRun={() => runCode()}
       />
