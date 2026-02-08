@@ -1,4 +1,4 @@
-import { X, Share2, Play } from "lucide-react";
+import { X, Share2, Play, Square } from "lucide-react";
 
 interface TerminalOutput {
   type: "log" | "error" | "warn" | "info";
@@ -54,6 +54,13 @@ export function Terminal({ output, onClear, onShare, onRun }: TerminalProps) {
           title="Clear (Esc)"
         >
           <X className="w-3 h-3" />
+        </button>
+        <button
+          onClick={window.globalThis._openApp}
+          className="text-gray-400 hover:text-white transition-colors"
+          title="Open App"
+        >
+          <Square className="w-3 h-3" />
         </button>
         <button
           onClick={onShare}
