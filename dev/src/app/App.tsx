@@ -774,20 +774,7 @@ export default function App() {
     console.info = (...args) => captureLog("info", ...args);
 
     try {
-      // Execute code
-      const result = eval(codeString);
-
-      // If there's a return value and nothing was logged, show it
-      if (result !== undefined && logs.length === 0) {
-        logs.push({
-          type: "log",
-          content:
-            typeof result === "object"
-              ? JSON.stringify(result, null, 2)
-              : String(result),
-          timestamp: Date.now(),
-        });
-      }
+      new Function(codeString)();
     } catch (error: any) {
       logs.push({
         type: "error",
